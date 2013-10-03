@@ -9,7 +9,7 @@ class regutil(object):
         self.__ru__openhnd = None
         self.__ru__lasterror = None
 
-    def __openkey(self, pkey, sbkey):
+    def __openkey(self, pkey=win32con.HKEY_LOCAL_MACHINE, sbkey=r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"):
             try:
                 retval = win32api.RegOpenKeyEx(pkey, sbkey, 0, win32con.KEY_READ or win32con.KEY_WOW64_64KEY)
                 self.__ru__openhnd = retval
@@ -29,6 +29,8 @@ class regutil(object):
     def getregvalex(self,rvalue,sbkey,pkey = win32con.HKEY_LOCAL_MACHINE):
         if self.__openkey(pkey,sbkey):
             return self.getregvalue(rvalue)
+        else:
+            return False
              
             
 

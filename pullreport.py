@@ -10,7 +10,7 @@ class Pull(object):
 #        self.__pull__erpfragobj=TallyErpFragment()
         self.__pull__srcport=9000
         self.__pull__srcip="localhost"
-        self.__pull__cname="Tret"
+        self.__pull__cname=None
         self.__pull__reportdict=dict()
         self.__pull__last__failure__reason=""
     def setstatics(self,srcport,srcip,cname):
