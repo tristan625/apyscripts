@@ -21,7 +21,7 @@ class dbutil(object):
         except ImportError, ex:
             raise ImportError("Unable To Import DbAdapter %s" % adapter)
 
-    def set_connection_params(self, host, user, passwd, db):
+    def set_connection_params(self, db, host=None, user=None, passwd=None):
         self.dbhost = host
         self.dbuser = user
         self.dbpass = passwd
@@ -74,8 +74,11 @@ class dbutil(object):
 
     def __dbconnect(self):
         try:
-            self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
+            if self.dbtype != "sqlite":
+                self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
                                          db="%s" % self.dbname)
+            else:
+                self.dbcon = self.db.connect(self.dbname)
             return True
         except Exception, ex:
             self.last_error = str(ex)
