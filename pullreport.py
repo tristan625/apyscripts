@@ -10,7 +10,7 @@ class Pull(object):
 #        self.__pull__erpfragobj=TallyErpFragment()
         self.__pull__srcport=9000
         self.__pull__srcip="localhost"
-        self.__pull__cname="Tret"
+        self.__pull__cname=None
         self.__pull__reportdict=dict()
         self.__pull__last__failure__reason=""
     def setstatics(self,srcport,srcip,cname):
@@ -70,6 +70,9 @@ class Pull(object):
     def pushreport(self,repname,pushmatter):
         reqmatter=self.__pull__fragobj.preparefragment(2, repname, self.__pull__cname,pushmatter)
         self.__pull__httpobj.setconnectionparams(self.__pull__srcip, self.__pull__srcport)
+        f=open(r"c:\adi\test.xml","w")
+        f.write(reqmatter)
+        f.close()
         ##retmatter=self.__pull__httpobj.getdata(reqmatter)
         retmatter=self.__pull__httpobj.getdataviarequestobj(reqmatter)
         if retmatter != None:

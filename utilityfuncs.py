@@ -1,9 +1,23 @@
 #Shree Ganeshayah Namah
 
-import types,os,os.path,socket,glob,zipfile,sys,datetime,win32api,csv
+import types,os,os.path,socket,glob,zipfile,sys,datetime,csv
 from win32api import GetSystemDirectory,GetTempPath, GetModuleFileName,GetModuleHandle
 from win32gui import FindWindow
+import win32con
 failure_reason=None
+
+def argltodict(listoftuples, order=None):
+    returndict = dict()
+    if order is None:
+        keyindex =0
+        valueindex =1
+    elif order is not None:
+        keyindex = order.split(':')[0]
+        valueindex = order.split(':')[1]
+    for etuple in listoftuples:
+        returndict[etuple[keyindex]]= etuple[valueindex]
+    return returndict
+
 
 def issequence(seq):
    if type(seq)==types.ListType or type(seq)==types.TupleType:
@@ -183,6 +197,7 @@ def getSysDir():
     return GetSystemDirectory()
 def getTempDir():
     return GetTempPath()
+
 def checkzip(fname):
     zipobj=zipfile.ZipFile(fname,"r")
     if zipobj.testzip() is None:

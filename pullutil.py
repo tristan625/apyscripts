@@ -12,7 +12,7 @@ class Utilitypull(Pull):
         self.__utilpull__last__failure__reason=None
         self.rootelem=None
         self.xpcontext=None
-        self.__voucher__template = """<VOUCHER  VCHTYPE="Sales Order" ACTION="Create" OBJVIEW="Invoice Voucher View">
+        self.__voucher__template = """<VOUCHER  VCHTYPE="Sales Order" ACTION="Create" OBJVIEW="Invoice Voucher View" xmlns:UDF="TallyUDF">
         <BASICBUYERADDRESS.LIST TYPE="String">
         <BASICBUYERADDRESS/>
         </BASICBUYERADDRESS.LIST>
@@ -28,12 +28,12 @@ class Utilitypull(Pull):
         <BASICFINALDESTINATION/>
         <EFFECTIVEDATE/>
         <NARRATION/>
-        <LEDGERENTRIES.LIST>
+        <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME/>
         <ISDEEMEDPOSITIVE/>
         <ISPARTYLEDGER/>
         <AMOUNT/>
-        </LEDGERENTRIES.LIST>
+        </ALLLEDGERENTRIES.LIST>
         </VOUCHER>
         """
         
@@ -168,6 +168,19 @@ class Utilitypull(Pull):
             vlist=self.getvaluelist("//MDFADDONNAME",retmatter,True)
             if vlist not in [False,None]:
                 return [elem.get_content() for elem in vlist]
+        else:
+            self.__utilpull__last__failure__reason=Pull.getlasterror(self)
+            return False
+
+    def getstockitems(self, repname="List Of Accounts", return_as_object = False):
+        self.definereport(repname,"ACCOUNTTYPE")
+        retmatter=self.pullreport(repname,"STOCKITEMS")
+        if retmatter not in [False,None]:
+            vlist=self.getvaluelist("//STOCKITEM",retmatter,True)
+            if vlist not in [False,None] and not return_as_object:
+                return [elem.get_properties().get_content() for elem in vlist ]
+            elif vlist not in [False,None] and return_as_object:
+                return vlist
         else:
             self.__utilpull__last__failure__reason=Pull.getlasterror(self)
             return False

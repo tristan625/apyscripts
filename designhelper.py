@@ -1,5 +1,6 @@
 #Shree Ganeshayah Namah
 
+import types
 
 class designhelper(object):
     def __init__(self):
@@ -17,16 +18,20 @@ class designhelper(object):
        @param eventfunct:-function to be called in response to the click event
     """
 
-    def DrawSelect(self, name, collection, order, selectedindex=0, selectedvalue=None, accesskey='p', style=None, taborder=None, hasEvent=False, eventfunc=None):
+    def DrawSelect(self, name, collection, order, selectedindex=0, selectedvalue=None, accesskey='p', style=None, taborder=None, hasEvent=False, eventfunc=None, attrs=None):
         keyval = order.split(":")
-        matter = "<select name='%s' id='%s'>" % (name, name)
+        matter = "<select name='%s' id='%s' " % (name, name)
+        if type(attrs) == types.DictionaryType: # we have a dictionary of attributes add
+          for attr in attrs:
+              matter += " %s=%s " % (attr, attrs[attr])
         if style  is not None:
             matter += "style='%s'" % style
         if taborder is not None:
             matter += "tabindex='%s'" % taborder
+        matter +=">"
         for cnt in range(len(collection)):
             matter += "<option value='"
-            if len(keyval) == 1:
+            if len(keyval) == 1: #we are probably rendering an array
                 matter += str(cnt) + "'"
             else:
                 matter += str(collection[cnt][int(keyval[1])]) + "'"
@@ -64,4 +69,7 @@ if __name__ == '__main__':
     designobj = designhelper()
     months = ['January', 'Feburary', 'March', 'April', 'May', 'June', 'July', \
               'August', 'September', 'October', 'November', 'December']
-    print designobj.DrawSelect('ll', months, "", 0, 2)
+    # print designobj.DrawSelect('ll', months, "", 0, 2)
+    tbldata = [('TDS80MC:5:2','80c'),('TDS80L:2:2','80d')]
+    print designobj.DrawSelect('testselect',tbldata,"1:0",0,'TDS80L:2:2')
+
