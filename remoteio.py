@@ -69,12 +69,12 @@ class remoteio:
                 opener = urllib2.build_opener(proxy_handler)
                 urllib2.install_opener(opener)
             if not isformdata:
-                f=urllib2.urlopen(self.__formurl(),reqdata)
+                f=urllib2.urlopen(self.__formurl(2 if issecure else 1),reqdata)
             elif isformdata==True and type(reqdata)in [types.TupleType ,types.DictType]:
                 if issecure==True:
-                    f=urllib2.urlopen(self.__formurl(2),urllib.urlencode(reqdata))
+                    f=urllib2.urlopen(self.__formurl(2 if issecure else 1),urllib.urlencode(reqdata))
                 else:
-                    f=urllib2.urlopen(self.__formurl(),urllib.urlencode(reqdata))
+                    f=urllib2.urlopen(self.__formurl(2 if issecure else 1),urllib.urlencode(reqdata))
             matter=f.read(-1)
             return matter
         except urllib2.URLError,e:
@@ -104,8 +104,8 @@ class remoteio:
                 return None
         finally:
             if f!=None:
-                pass
-##                f.close()
+               f.close()
+
     def __formurl(self,type=1):
         if type==1:
             scheme="http://"
