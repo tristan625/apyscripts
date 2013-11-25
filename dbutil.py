@@ -12,7 +12,8 @@ class dbutil(object):
         self.dbpass = None
         self.dbname = None
         self.db_types_supported = {'mysql': 'MySQLdb', 'pgsql': 'psycopg2', 'sqlite': 'sqlite3'}
-        self.dbtype = dbtype.lower()
+        self.dbtype = dbtype
+        self.last_error = None
         if not self.dbtype in self.db_types_supported:
             raise NotImplementedError("Invalid Or NotImplemented DB Type Specified")
         try:
@@ -55,7 +56,7 @@ class dbutil(object):
         return stmt
 
 
-    def querydb(self, stmt, args=None):
+    def querydb(self, stmt, args=None, closecon=True):
         try:
             if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0):
                 if not self.__dbconnect():
@@ -69,7 +70,7 @@ class dbutil(object):
             return False
         finally:
             if self.dbcursor is not None: self.dbcursor.close()
-            if self.dbcon is not None: self.dbcon.close()
+            if self.dbcon is not None and closecon: self.dbcon.close()
 
 
     def __dbconnect(self):
@@ -84,6 +85,12 @@ class dbutil(object):
             self.last_error = str(ex)
             return False
 
+    def __pushid(self, args):
+        for cnt in range(len(args)):
+            if args[cnt] == "@@id":
+    #            we need to replace this the last inserted id
+                 args[cnt] = self.dbcursor.lastrowid
+        return args
     def execute_batch(self, stmt_dict):
         try:
             if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0):
@@ -92,10 +99,11 @@ class dbutil(object):
             self.dbcon.autocommit(False)
             self.dbcursor = self.dbcon.cursor()
             for stmt in stmt_dict:
-                self.dbcursor.execute(stmt, stmt_dict[stmt])
+                self.dbcursor.execute(stmt, stmt_dict[stmt] if stmt_dict[stmt] is not None else None )
             self.dbcon.commit()
             return True
         except Exception, ex:
+            self.last_error = str(ex)
             self.dbcon.rollback()
             return False
         finally:
@@ -107,7 +115,7 @@ class dbutil(object):
 
 
     def get_last_error(self):
-        return self.last_error if self.last_error is None else "Everything Ok"
+        return self.last_error if self.last_error is not None else "Everything Ok"
 
 
 if __name__ == '__main__':
