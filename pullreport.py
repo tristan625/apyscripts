@@ -4,6 +4,7 @@ from apyscripts.fragment import TallyFragment
 class Pull(object):
     __author__="adi"
     __date__ ="$Feb 27, 2009 11:42:00 AM$"
+
     def __init__(self):
         self.__pull__httpobj=remoteio()
         self.__pull__fragobj=TallyFragment()
@@ -13,15 +14,18 @@ class Pull(object):
         self.__pull__cname=None
         self.__pull__reportdict=dict()
         self.__pull__last__failure__reason=""
+
     def setstatics(self,srcport,srcip,cname):
         self.__pull__srcport=srcport
         self.__pull__srcip=srcip
         self.__pull__cname=cname
+
     def definereport(self,repname,*stvars):
         reportvars=[]
         for var in stvars:
             reportvars.append(var)
         self.__pull__reportdict[repname]=reportvars
+
     def pullreportforerp(self,isource,modulename,*stvars):
         stdict=None
         if not self.__pull__reportdict.has_key(modulename):
@@ -44,6 +48,7 @@ class Pull(object):
         else:
             self.__pull__last__failure__reason=self.__pull__httpobj.getlasterror()
             return False
+
     def pullreport(self,repname,*stvars):
         if not self.__pull__reportdict.has_key(repname):
             return False
@@ -62,11 +67,13 @@ class Pull(object):
         else:
             self.__pull__last__failure__reason=self.__pull__httpobj.getlasterror()
             return False
+
     def getpreparedmatter(self,repname,pushmatter,cname=None):
         if cname is None:
             return self.__pull__fragobj.preparefragment(2, repname, self.__pull__cname,pushmatter)
         else:
             return self.__pull__fragobj.preparefragment(2, repname, cname,pushmatter)
+
     def pushreport(self,repname,pushmatter):
         reqmatter=self.__pull__fragobj.preparefragment(2, repname, self.__pull__cname,pushmatter)
         self.__pull__httpobj.setconnectionparams(self.__pull__srcip, self.__pull__srcport)
@@ -80,6 +87,7 @@ class Pull(object):
         else:
             self.__pull__last__failure__reason=self.__pull__httpobj.getlasterror()
             return False
+
     def pushdataasis(self,pushmatter):
         ##reqmatter=self.__pull__fragobj.preparefragment(2, repname, self.__pull__cname,pushmatter)
         self.__pull__httpobj.setconnectionparams(self.__pull__srcip, self.__pull__srcport)
@@ -90,6 +98,7 @@ class Pull(object):
         else:
             self.__pull__last__failure__reason=self.__pull__httpobj.getlasterror()
             return False
+
     def getlasterror(self):
         return self.__pull__last__failure__reason
 

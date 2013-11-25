@@ -12,7 +12,7 @@ class dbutil(object):
         self.dbpass = None
         self.dbname = None
         self.db_types_supported = {'mysql': 'MySQLdb', 'pgsql': 'psycopg2', 'sqlite': 'sqlite3'}
-        self.dbtype = dbtype
+        self.dbtype = dbtype.lower()
         if not self.dbtype in self.db_types_supported:
             raise NotImplementedError("Invalid Or NotImplemented DB Type Specified")
         try:
