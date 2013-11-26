@@ -1,6 +1,6 @@
 # Shree Ganeshaayah Namah
 __author__ = 'logictech'
-import importlib
+#import importlib
 
 
 class dbutil(object):
@@ -18,7 +18,8 @@ class dbutil(object):
             raise NotImplementedError("Invalid Or NotImplemented DB Type Specified")
         try:
             adapter = self.db_types_supported[self.dbtype]
-            self.db = importlib.import_module(adapter)
+            self.db = __import__(adapter, globals(), locals(), [], -1)
+            #self.db = importlib.import_module(adapter)
         except ImportError, ex:
             raise ImportError("Unable To Import DbAdapter %s" % adapter)
 

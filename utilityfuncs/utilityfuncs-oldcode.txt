@@ -1,0 +1,94 @@
+#def dumptoexcel(payload,headers,ofname):
+#        try:
+#            wrkbook=xlwt.Workbook()
+#            wrksheet=wrkbook.add_sheet("Sheet 1")
+#            wrkbook.set_active_sheet(0)
+#            rowno=0
+#            for cnt in range(len(headers)):
+#                wrksheet.write(rowno,cnt,headers[cnt])
+#            rowno+=1
+#            for row_to_write in payload:
+#                #row_to_write=payload[index]
+#                for cell in range(len(row_to_write)):
+#                    wrksheet.write(rowno,cell,row_to_write[cell])
+#                rowno+=1
+#            wrkbook.save(ofname)
+#            return True
+#        except Exception,ex:
+#            failure_reason=str(ex)
+#            return False
+
+
+##def extractzip(fname,extractpath):
+##    try:
+##        if not os.path.exists(extractpath):
+##            os.makedirs(extractpath)
+##        zipobj=zipfile.ZipFile(fname)
+##        fnames=zipobj.namelist()
+##        f=None
+##        for name in fnames:
+##            matter=zipobj.read(name)
+##            if len(matter)!=0:#we have a directory to create
+##                name=name.replace("/","\\")
+##                if name.find("\\")!=-1:
+##                   os.makedirs(extractpath+"\\"+name[:name.rfind("\\")])
+##                   f=open(extractpath+"\\"+name[name.rfind("\\")+1:],"wb")
+##                else:
+##                    f=open(extractpath+"\\"+name,"wb")
+##                f.write(matter)
+##                f.close()
+##            else:
+##                name=name.replace("/","\\")
+##                if name.endswith("\\"):#no files in directory
+##                    os.makedirs(extractpath+"\\"+name[:name.rfind("\\")])
+##                else:
+##                    os.makedirs(extractpath+"\\"+name[:name.rfind("\\")])
+##                    f=open(extractpath+"\\"+name[name.rfind("\\")+1:],"wb")
+##                    f.close()
+##
+##        zipobj.close()
+##        return True
+##    except IOError,ie:
+##        return False
+##    except Exception,ex:
+##        return False
+##def getwindowsinfo():
+##   hkey=None
+##   hsubkey=None
+##   fp=open("rlog.txt","w")
+##   try:
+##        import _winreg
+##        hkey=_winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
+##        hsubkey=_winreg.OpenKeyEx(hkey,"SOFTWARE\Microsoft\Windows NT\CurrentVersion",0,_winreg.KEY_READ)
+##        winserial=_winreg.QueryValueEx(hsubkey,"ProductId")[0]
+##        fp.write(winserial)
+##        widate=_winreg.QueryValueEx(hsubkey,"InstallDate")[0]
+##        prodname=_winreg.QueryValueEx(hsubkey,"ProductName")[0]
+##        fp.write(prodname)
+##        widate=str(datetime.datetime.fromtimestamp(widate))
+##        fp.write(str(widate))
+##        worg=_winreg.QueryValueEx(hsubkey,"RegisteredOrganization")[0]
+##        wowner=_winreg.QueryValueEx(hsubkey,"RegisteredOwner")[0]
+##        if worg==None or len(worg)==0:
+##            worg="NA"
+##        fp.write(str(worg))
+##        return [winserial,widate,prodname]
+##   except ImportError,ie:
+##        failure_reason=str(ie)
+##        fp.write(str(ie))
+##        return False
+##   except EnvironmentError,er:
+##       failure_reason=str(er)
+##       fp.write(str(er))
+##       return False
+##   except Exception,ex:
+##       failure_reason=str(ex)
+##       fp.write(ex)
+##       return False
+##   finally:
+##       if hsubkey:
+##           _winreg.CloseKey(hsubkey)
+##       if hkey:
+##           _winreg.CloseKey(hkey)
+##       fp.close()
+
