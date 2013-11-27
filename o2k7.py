@@ -1,9 +1,9 @@
 #Shree Ganeshayah Namah
 import libxml2 as lb2
 from apyscripts.utilityfuncs.utilityfuncs import extractzip,checkzip
-from apyscripts.utilityfuncs.winfuncs import getTempDir
 from os.path import exists,isdir,isfile
 from datetime import datetime,timedelta
+from tempfile import gettempdir
 import glob,types
 
 class o2k7(object):
@@ -13,7 +13,7 @@ class o2k7(object):
     def __init__(self):
         self.__o2k7__lasterror=None
         self.__o2k7__filename=None
-        self.__o2k7_temppath=getTempDir()
+        self.__o2k7_temppath=gettempdir()
         self.__o2k7__xmlobj=None
         self.__o2k7__wrksheet_path="xl\\worksheets"
         self.__o2k7__sheetmatter=None
