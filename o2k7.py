@@ -4,6 +4,7 @@ from apyscripts.utilityfuncs.utilityfuncs import extractzip,checkzip
 from os.path import exists,isdir,isfile
 from datetime import datetime,timedelta
 from tempfile import gettempdir
+from os import sep
 import glob,types
 
 class o2k7(object):
@@ -62,7 +63,7 @@ class o2k7(object):
         if not self.__unpack():
             self.__o2k7__lasterror="Extraction Failure"
             return False
-        f=open(self.__o2k7_temppath + os.sep + self.__o2k7__odsdatafile)
+        f=open(self.__o2k7_temppath + sep + self.__o2k7__odsdatafile)
         matter=f.read(-1)
         f.close()
         rows=self.getvaluelist("//table:table-row",matter,True,populatens=True,autousens=True)
