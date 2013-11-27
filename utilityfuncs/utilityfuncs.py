@@ -234,8 +234,22 @@ def dumptocsv(payload,headers,ofname):
 
 def extractzip(fname,extractpath,createasfname=False):
     try:
+        """
+        :desc: This function simply extracts the content of the 
+        zip file specified by fname into the destination specified
+        by extractpath
+        :fname: zip file to extract
+        :extractpath: path where the contents of the zip file
+         need to extracted
+        :createasfname: This flag indicates that a folder by
+        the fname parameter is created and the files are extracted
+        into the said folder
+        """
+        # denotes wether the current entry in the zip file is 
+        # a file or directory
         entryhasfile=False
         if createasfname==True:
+            extractpath = extractpath + os.sep if not extractpath.endswith(os.sep) else extractpath
             extractpath+= os.path.basename(fname)
         if not os.path.exists(extractpath):
             os.makedirs(extractpath)
@@ -243,21 +257,21 @@ def extractzip(fname,extractpath,createasfname=False):
         fnames=zipobj.namelist()
         f=None
         for name in fnames:
-            name=name.replace("/","\\")
-            if name.find("\\")!=-1:
-                if name.endswith("\\"):#empty directory
-                   if not os.path.isdir(extractpath+"\\"+name):
-                        os.makedirs(extractpath+"\\"+name)
+            name=name.replace("/",os.sep) 
+            if name.find(os.sep)!=-1:
+                if name.endswith(os.sep): #empty directory
+                   if not os.path.isdir(extractpath + os.sep +name):
+                        os.makedirs(extractpath + os.sep +name)
                    entryhasfile=False
                 else:
                      entryhasfile=True
-                     if not os.path.isdir(extractpath+"\\"+name[:name.rfind("\\")]):
-                         os.makedirs(extractpath+"\\"+name[:name.rfind("\\")])
+                     if not os.path.isdir(extractpath + os.sep +name[:name.rfind(os.sep)]):
+                         os.makedirs(extractpath + os.sep + name[:name.rfind(os.sep)])
             else:
                 entryhasfile=True
             if entryhasfile:
-                matter=zipobj.read(name.replace("\\","/"))
-                f=open(extractpath+"\\"+name,"wb")
+                matter=zipobj.read(name.replace(os.sep,"/"))
+                f=open(extractpath + os.sep + name,"wb")
                 f.write(matter)
                 f.close()
         zipobj.close()
