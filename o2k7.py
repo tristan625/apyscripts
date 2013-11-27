@@ -1,6 +1,7 @@
 #Shree Ganeshayah Namah
 import libxml2 as lb2
-from utilityfuncs import extractzip,getTempDir,checkzip
+from apyscripts.utilityfuncs.utilityfuncs import extractzip,checkzip
+from apyscripts.utilityfuncs.winfuncs import getTempDir
 from os.path import exists,isdir,isfile
 from datetime import datetime,timedelta
 import glob,types
