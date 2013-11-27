@@ -11,6 +11,7 @@ class dbutil(object):
         self.dbuser = None
         self.dbpass = None
         self.dbname = None
+        self.dbport = None
         self.db_types_supported = {'mysql': 'MySQLdb', 'pgsql': 'psycopg2', 'sqlite': 'sqlite3'}
         self.dbtype = dbtype
         self.last_error = None
@@ -23,11 +24,12 @@ class dbutil(object):
         except ImportError, ex:
             raise ImportError("Unable To Import DbAdapter %s" % adapter)
 
-    def set_connection_params(self, db, host=None, user=None, passwd=None):
+    def set_connection_params(self, db, host=None, user=None, passwd=None, port=None):
         self.dbhost = host
         self.dbuser = user
         self.dbpass = passwd
         self.dbname = db
+        self.dbport = port
 
     def getinsertsql(self, tblname, fields, values=None, makeprepared=True):
         counter = 0
@@ -78,7 +80,7 @@ class dbutil(object):
         try:
             if self.dbtype != "sqlite":
                 self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                         db="%s" % self.dbname)
+                                         db="%s" % self.dbname, port="%s" % str(self.dbport) if self.dbport is not None else None)
             else:
                 self.dbcon = self.db.connect(self.dbname)
             return True
