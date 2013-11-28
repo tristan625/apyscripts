@@ -29,7 +29,12 @@ class dbutil(object):
         self.dbuser = user
         self.dbpass = passwd
         self.dbname = db
-        self.dbport = port
+        try: 
+            self.dbport = int(port)
+        except ValueError, ve:
+            self.last_error = str(ve)
+            self.dbport = None
+        
 
     def getinsertsql(self, tblname, fields, values=None, makeprepared=True):
         counter = 0
@@ -79,8 +84,12 @@ class dbutil(object):
     def __dbconnect(self):
         try:
             if self.dbtype != "sqlite":
-                self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                         db="%s" % self.dbname, port="%s" % str(self.dbport) if self.dbport is not None else None)
+                if self.dbport is None:
+                    self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
+                                                 db="%s" % self.dbname)
+                else:
+                    self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
+                                                 db="%s" % self.dbname, port=self.dbport)
             else:
                 self.dbcon = self.db.connect(self.dbname)
             return True
