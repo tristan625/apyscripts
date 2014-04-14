@@ -124,7 +124,8 @@ class dbutil(object):
             return True
         except Exception, ex:
             self.last_error = str(ex)
-            self.dbcon.rollback()
+            if self.dbcon is not None:
+                self.dbcon.rollback()
             return False
         finally:
             if self.dbcursor is not None:
