@@ -85,11 +85,19 @@ class dbutil(object):
         try:
             if self.dbtype != "sqlite":
                 if self.dbport is None:
-                    self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                                 db="%s" % self.dbname)
+                    if self.dbtype == "mysql":
+                        self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
+                                                     database="%s" % self.dbname)
+                    else:
+                        self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, password="%s" % self.dbpass,
+                                                     database="%s" % self.dbname)
                 else:
-                    self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                                 db="%s" % self.dbname, port=self.dbport)
+                    if self.dbtype == "mysql":
+                        self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
+                                                     database="%s" % self.dbname, port=self.dbport)
+                    else:
+                        self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, password="%s" % self.dbpass,
+                                                     database="%s" % self.dbname, port=self.dbport)
             else:
                 self.dbcon = self.db.connect(self.dbname)
             return True
@@ -119,7 +127,8 @@ class dbutil(object):
             self.dbcon.rollback()
             return False
         finally:
-            self.dbcursor.close()
+            if self.dbcursor is not None:
+                self.dbcursor.close()
             if self.dbcon is not None:
                 self.dbcon.autocommit(True)
             if self.dbcon is not None:
