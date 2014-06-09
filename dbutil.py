@@ -46,7 +46,7 @@ class dbutil(object):
         stmt += ") values("
         for field in fields:
             counter += 1
-            stmt += "%s," if self.db.paramstyle == 'format' else "?," \
+            stmt += "%s," if self.db.paramstyle == 'pyformat' else "?," \
                 if self.db.paramstyle == 'qmark' else ':' + str(counter) + ','
         stmt = stmt[:-1]
         stmt += ")"
@@ -57,7 +57,7 @@ class dbutil(object):
         stmt = "update %s set " % tblname
         for cnt in range(len(fields)):
             stmt += " %s=%s" % (fields[cnt],
-                                "%s," if self.db.paramstyle == 'format' else "?,"
+                                "%s," if self.db.paramstyle == 'pyformat' else "?,"
                                 if self.db.paramstyle == 'qmark' else ':' + str(counter) + ',')
         stmt = stmt[:-1]
         stmt += " where %s" % wherecl
@@ -66,7 +66,7 @@ class dbutil(object):
 
     def querydb(self, stmt, args=None, closecon=True):
         try:
-            if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0):
+            if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0) or (hasattr(self.dbcon, 'closed') and self.dbcon.closed ==1):
                 if not self.__dbconnect():
                     raise Exception, "Unable To Connect To DB"
             self.dbcursor = self.dbcon.cursor()
@@ -111,15 +111,24 @@ class dbutil(object):
     #            we need to replace this the last inserted id
                  args[cnt] = self.dbcursor.lastrowid
         return args
+
     def execute_batch(self, stmt_dict):
         try:
-            if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0):
+            print "1"
+            if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0) or (hasattr(self.dbcon, 'closed') and self.dbcon.closed ==1):
                 if not self.__dbconnect():
                     raise Exception, "Unable To Connect To DB"
-            self.dbcon.autocommit(False)
+            print "2"
+            print self.dbcon
+            print dir(self.dbcon)
+            self.dbcon.autocommit = False
+            print "3"
             self.dbcursor = self.dbcon.cursor()
+            print "4"
             for stmt in stmt_dict:
+                print "5"
                 self.dbcursor.execute(stmt, stmt_dict[stmt] if stmt_dict[stmt] is not None else None )
+            print "6"
             self.dbcon.commit()
             return True
         except Exception, ex:
@@ -131,7 +140,7 @@ class dbutil(object):
             if self.dbcursor is not None:
                 self.dbcursor.close()
             if self.dbcon is not None:
-                self.dbcon.autocommit(True)
+                self.dbcon.autocommit = True
             if self.dbcon is not None:
                 self.dbcon.close()
 
