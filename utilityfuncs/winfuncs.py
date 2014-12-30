@@ -14,7 +14,7 @@ def isAppRunning(apptitle=None,appclass=None):
 
 def getapppath(returnpathwexe=False):
     if not returnpathwexe:
-        return os.path.dirname(GetModuleFileName(GetModuleHandle(None)))
+        return dirname(GetModuleFileName(GetModuleHandle(None)))
     else:    
         return GetModuleFileName(GetModuleHandle(None))
 

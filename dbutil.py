@@ -1,5 +1,5 @@
 # Shree Ganeshaayah Namah
-__author__ = 'logictech'
+__author__ = 'aditya'
 #import importlib
 
 
@@ -46,7 +46,7 @@ class dbutil(object):
         stmt += ") values("
         for field in fields:
             counter += 1
-            stmt += "%s," if self.db.paramstyle == 'pyformat' else "?," \
+            stmt += "%s," if self.db.paramstyle == 'pyformat' or self.db.paramstyle == "format" else "?," \
                 if self.db.paramstyle == 'qmark' else ':' + str(counter) + ','
         stmt = stmt[:-1]
         stmt += ")"
@@ -57,7 +57,7 @@ class dbutil(object):
         stmt = "update %s set " % tblname
         for cnt in range(len(fields)):
             stmt += " %s=%s" % (fields[cnt],
-                                "%s," if self.db.paramstyle == 'pyformat' else "?,"
+                                "%s," if self.db.paramstyle == 'pyformat' or self.db.paramstyle == "format" else "?,"
                                 if self.db.paramstyle == 'qmark' else ':' + str(counter) + ',')
         stmt = stmt[:-1]
         stmt += " where %s" % wherecl
@@ -68,7 +68,7 @@ class dbutil(object):
         try:
             if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0) or (hasattr(self.dbcon, 'closed') and self.dbcon.closed ==1):
                 if not self.__dbconnect():
-                    raise Exception, "Unable To Connect To DB"
+                    raise Exception, "Unable To Connect To DB:-%s" % self.last_error
             self.dbcursor = self.dbcon.cursor()
             self.dbcursor.execute(stmt, args if args is not None and (
                 isinstance(args, dict) or isinstance(args, list)) else None)
@@ -87,14 +87,14 @@ class dbutil(object):
                 if self.dbport is None:
                     if self.dbtype == "mysql":
                         self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                                     database="%s" % self.dbname)
+                                                     db="%s" % self.dbname)
                     else:
                         self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, password="%s" % self.dbpass,
                                                      database="%s" % self.dbname)
                 else:
                     if self.dbtype == "mysql":
                         self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, passwd="%s" % self.dbpass,
-                                                     database="%s" % self.dbname, port=self.dbport)
+                                                     db="%s" % self.dbname, port=self.dbport)
                     else:
                         self.dbcon = self.db.connect(host="%s" % self.dbhost, user="%s" % self.dbuser, password="%s" % self.dbpass,
                                                      database="%s" % self.dbname, port=self.dbport)
@@ -114,21 +114,13 @@ class dbutil(object):
 
     def execute_batch(self, stmt_dict):
         try:
-            print "1"
             if self.dbcon is None or (hasattr(self.dbcon,'open') and self.dbcon.open == 0) or (hasattr(self.dbcon, 'closed') and self.dbcon.closed ==1):
                 if not self.__dbconnect():
-                    raise Exception, "Unable To Connect To DB"
-            print "2"
-            print self.dbcon
-            print dir(self.dbcon)
+                    raise Exception, "Unable To Connect To DB:-%s" % self.last_error
             self.dbcon.autocommit = False
-            print "3"
             self.dbcursor = self.dbcon.cursor()
-            print "4"
             for stmt in stmt_dict:
-                print "5"
                 self.dbcursor.execute(stmt, stmt_dict[stmt] if stmt_dict[stmt] is not None else None )
-            print "6"
             self.dbcon.commit()
             return True
         except Exception, ex:

@@ -1,13 +1,13 @@
 #Shree Ganeshayah Namah
 
-import types,os,os.path,socket,glob,zipfile,sys,datetime,csv
-failure_reason=None
+import types, os, os.path, socket, glob, zipfile, sys, datetime, csv
+failure_reason = None
 
 def argltodict(arglist):
-   argdict = {}
-   for opt,val in arglist:
+    argdict = {}
+    for opt,val in arglist:
        argdict[opt]= val
-   return argdict
+    return argdict
 
 def argltodict(listoftuples, order=None):
     returndict = dict()
@@ -89,7 +89,7 @@ def modifyini(fname, keyvalues, commentchar='*'):
                 line = line + os.linesep        
             lines_to_write.append(line)        
         fp = open(fname, 'w')
-        print lines_to_write
+        #print lines_to_write
         fp.writelines(lines_to_write)
         fp.close()
         return True
