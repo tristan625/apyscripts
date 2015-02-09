@@ -36,7 +36,7 @@ class Utilitypull(Pull):
         </ALLLEDGERENTRIES.LIST>
         </VOUCHER>
         """
-        
+
         self.__ledger__template = """
         <LEDGER NAME="" RESERVEDNAME="">
         <PARENT/>
@@ -68,6 +68,26 @@ class Utilitypull(Pull):
       <BILLCREDITPERIOD/>
      </LEDGER>
      """
+        self.__costcenter__template = """
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+          <COSTCENTRE NAME="" RESERVEDNAME="">
+            <PARENT/>
+            <CATEGORY/>
+            <REVENUELEDFOROPBAL>No</REVENUELEDFOROPBAL>
+            <AFFECTSSTOCK>No</AFFECTSSTOCK>
+            <FORPAYROLL>No</FORPAYROLL>
+            <FORJOBCOSTING>No</FORJOBCOSTING>
+            <ISEMPLOYEEGROUP>No</ISEMPLOYEEGROUP>
+            <SORTPOSITION> 1000</SORTPOSITION>
+            <LANGUAGENAME.LIST>
+                <NAME.LIST TYPE="String">
+                <NAME/>
+                </NAME.LIST>
+                <LANGUAGEID> 1033</LANGUAGEID>
+            </LANGUAGENAME.LIST>
+          </COSTCENTRE>
+        </TALLYMESSAGE>
+        """
         self.__item__template="""<TALLYMESSAGE><STOCKITEM NAME='' RESERVEDNAME="">
       <PARENT/>
       <CATEGORY/>
@@ -136,13 +156,16 @@ class Utilitypull(Pull):
 
     def getledgertemplate(self):
         return self.__ledger__template
-    
+
     def getitemtemplate(self):
         return self.__item__template
-    
+
     def getvouchertemplate(self):
         return self.__voucher__template
-    
+
+    def getcostcentertemplate(self):
+        return self.__costcenter__template
+
     def sanitizeforxml(self,content):
         return self.rootelem.encodeSpecialChars(content)
 
@@ -205,13 +228,13 @@ class Utilitypull(Pull):
         else:
             self.__utilpull__last__failure__reason=Pull.getlasterror(self)
             return False
-        
+
     def getvaluelist(self,path,matter,doparse=False,cnode=None,usehtml = False):
         try:
             if doparse==False and self.rootelem==None:
                 if usehtml:
                     self.rootelem=lb2.htmlParseDoc(matter,"utf-8")
-                else:    
+                else:
                     self.rootelem=lb2.parseMemory(matter,len(matter))
             elif doparse==True:
                 if self.rootelem!=None:
@@ -281,7 +304,7 @@ class Utilitypull(Pull):
             ## we have an error encountered in the parent module
             self.__utilpull__last__failure__reason=Pull.getlasterror(self)
         return self.__utilpull__last__failure__reason
-    
+
 if __name__=='__main__':
     hh=Utilitypull()
 ##    import time
