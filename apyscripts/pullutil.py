@@ -88,6 +88,12 @@ class Utilitypull(Pull):
           </COSTCENTRE>
         </TALLYMESSAGE>
         """
+        self.__company__template="""
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+            <COMPANY NAME="DEMO" ACTION="Alter">
+            </COMPANY>
+        </TALLYMESSAGE>
+        """
         self.__item__template="""<TALLYMESSAGE><STOCKITEM NAME='' RESERVEDNAME="">
       <PARENT/>
       <CATEGORY/>
@@ -172,6 +178,9 @@ class Utilitypull(Pull):
     def getitemtemplateasobject(self):
         nodelist=self.getvaluelist("//STOCKITEM",self.__item__template,True)
         return nodelist[0]
+
+    def getcompanytempate(self):
+        return self.__company__template
 
     def getcompanies(self):
         self.definereport("List Of Companies")
