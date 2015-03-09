@@ -179,7 +179,7 @@ class Utilitypull(Pull):
         nodelist=self.getvaluelist("//STOCKITEM",self.__item__template,True)
         return nodelist[0]
 
-    def getcompanytempate(self):
+    def getcompanytemplate(self):
         return self.__company__template
 
     def getcompanies(self):
