@@ -3,6 +3,7 @@
 import types, os, os.path, socket, glob, zipfile, sys, datetime, csv
 failure_reason = None
 
+
 def argltodict(arglist):
     argdict = {}
     for opt,val in arglist:
